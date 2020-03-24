@@ -9,15 +9,13 @@ div.game{
     width: 100%;
 }
 
-img#space_ship{
+#space_ship{
     height: 10%;
     width: 100px;
     position: absolute; 
 }
 
-img.alien_ship{
-    margin: 0;
-    padding: 0;
+.alien_ship{
     height: 10%;
     width: 100px;
     position: absolute; 
@@ -33,4 +31,9 @@ div.game{
     background-color: black;
     width: 100vw;
     height: 100vh;
+}
+
+progress#health{
+    width: 200px;
+    position: absolute;
 }

@@ -44,12 +44,16 @@ function createPlayer() {
 }
 
 function createAlien(x,y) {
+
     let alien = document.createElement("img")
+
     alien.src = "images/alien.png"
     alien.className = "alien_ship"
+
+    // alien.append(alien,health_bar)
     setPosition(alien,x,y)
     container.append(alien)
-    GAME_STATE.enemies.push({alien ,x ,y })
+    GAME_STATE.enemies.push({alien ,x ,y , alien_heath: 5})
 }
 
 function init() {
@@ -107,10 +111,16 @@ function checkPosition(element) {
         let x1 = alien.x 
         let x2 = alien.x + 100 
         if(x1 < element.x && x2 > element.x){
-            alien.alien.remove()
-            enemies.splice(enemies.indexOf(alien),1)
+            alien.alien_heath -= 1
+            if(alien.alien_heath == 0){
+                alien.alien.remove()
+                enemies.splice(enemies.indexOf(alien),1)
+            }
+            console.log(alien.alien_heath)
             element.lazer.remove()
             GAME_STATE.lazers.splice(GAME_STATE.lazers.indexOf(element),1)
+            // let health = document.getElementById("health")
+            // health.value -= 20; //Or whatever you want to do with it.
         }
     }
 }
