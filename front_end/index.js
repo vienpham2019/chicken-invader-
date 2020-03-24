@@ -9,8 +9,10 @@ const GAME_HEIGHT = window.innerHeight
 const PLAYER_MAX_SPEED = 15
 const lazerSpeed = 6
 
-const AMOUNT_ALIEN = 5
-const SPACE_BETWEEN = parseInt(GAME_WIDTH / AMOUNT_ALIEN) / 2
+const ENEMIES_PER_ROW = 10
+const ENEMY_HORIZONTAL_PADDING = 80
+const ENEMY_VERTICAL_PADDING = 70
+const ENEMY_VERTICAL_SPACING = 80
 
 let player_width
 let lazerCooldown = lazerSpeed
@@ -41,12 +43,10 @@ function createPlayer() {
     setPosition(player,GAME_WIDTH.playerX,GAME_STATE.playerY)
 }
 
-function createAlien(i) {
+function createAlien(x,y) {
     let alien = document.createElement("img")
     alien.src = "images/alien.png"
     alien.className = "alien_ship"
-    let x = SPACE_BETWEEN * i 
-    let y = 0
     setPosition(alien,x,y)
     container.append(alien)
     GAME_STATE.enemies.push({alien ,x ,y })
@@ -54,9 +54,10 @@ function createAlien(i) {
 
 function init() {
     createPlayer(container)
-
-    for(let i = 1; i <= AMOUNT_ALIEN ; i ++ ){
-        createAlien(i)
+    for(let i = 1; i <= 2 ; i ++){
+        const y = 0
+        const x = GAME_WIDTH / parseInt(i * 2)
+        createAlien(x,y)
     }
 }
 
