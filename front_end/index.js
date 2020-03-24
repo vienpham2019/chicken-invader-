@@ -1,12 +1,15 @@
+const container = document.querySelector(".game")
+
 const KEY_CODE_LEFT = 65 // A
 const KEY_CODE_RIGHT = 68 // D
 
-const GAME_WIDTH = window.innerWidth
+const GAME_WIDTH = window.innerWidth 
 const GAME_HEIGHT = window.innerHeight
 
 const PLAYER_MAX_SPEED = 15
-
 const lazerSpeed = 6
+
+let player_width
 let lazerCooldown = lazerSpeed
 
 const GAME_STATE = {
@@ -24,18 +27,18 @@ function setPosition(element,x,y) {
 }
 
 function createPlayer(container) {
-    GAME_STATE.playerX = GAME_WIDTH / 2 - (110 / 2)
-    GAME_STATE.playerY = GAME_HEIGHT - 110
 
     let player = document.createElement("img")
-    player.src = "image/pngguru.com.png"
+    player.src = "images/pngguru.com.png"
     player.id = "space_ship"
     container.append(player)
+    player_width = player.width
+    GAME_STATE.playerX = GAME_WIDTH / 2 - (player_width / 2)
+    GAME_STATE.playerY = GAME_HEIGHT - 110
     setPosition(player,GAME_WIDTH.playerX,GAME_STATE.playerY)
 }
 
 function init() {
-    const container = document.querySelector(".game")
     createPlayer(container)
 }
 
@@ -44,7 +47,7 @@ function updatePlayer() {
     if(GAME_STATE.leftPress && GAME_STATE.playerX > 0){
         GAME_STATE.playerX -= PLAYER_MAX_SPEED
     }
-    if(GAME_STATE.rightPress && GAME_STATE.playerX < GAME_HEIGHT){
+    if(GAME_STATE.rightPress && GAME_STATE.playerX < (GAME_WIDTH - player_width)){
         GAME_STATE.playerX += PLAYER_MAX_SPEED
     }
     setPosition(player,GAME_STATE.playerX,GAME_STATE.playerY)
@@ -52,9 +55,9 @@ function updatePlayer() {
 }
 
 function createLazer(container, x , y) {
-    x = x + (110 / 2)
+    x = x + (player_width / 2)
     let lazer = document.createElement("img")
-    lazer.src = "image/laserBlue16.png"
+    lazer.src = "images/laserBlue16.png"
     lazer.className = "lazer"
     container.append(lazer)
     setPosition(lazer,x,y)

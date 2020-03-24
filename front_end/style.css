@@ -1,19 +1,17 @@
 body{
-    /* background-color: black; */
-    margin: 0px;
+    margin: 0;
+    padding: 0;
     height: 100%;
-    overflow-y: hidden;
+    overflow: hidden;
 }
-canvas#main{
-    /* background-color: red; */
-    border: 1px solid black;
+div.game{
     height: 100%;
     width: 100%;
 }
 
 img#space_ship{
     height: 10%;
-    width: 6%;
+    width: 100px;
     position: absolute; 
 }
 
