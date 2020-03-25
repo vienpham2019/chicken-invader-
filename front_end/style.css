@@ -1,18 +1,18 @@
+*{  
+    margin: 0;
+    padding: 0;
+}
 body{
     background-color: black;
     color: white;
-    margin: 0;
-    padding: 0;
     height: 100%;
     overflow: hidden;
 }
 div.game{
-    /* background-image: url("https://i.pinimg.com/originals/80/40/b5/8040b5ff91ce8c3f153beebab39d584f.gif"); */
     height: 100%;
     width: 100%;
     background: url("https://thumbs.gfycat.com/BasicWeightyFeline-small.gif");
-    /* background-repeat: no-repeat; */
-    /* background-size: cover; */
+    position: relative;
 }
 
 #space_ship{
@@ -50,3 +50,33 @@ progress#health{
 }
 
 
+.startgame{
+    display: block;
+    width: 40%;
+    height: 60%;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+    background-color: rgba(64, 64, 163, 0.2);
+    border-radius: 10px;
+    top: 5vh;
+    text-align: center;
+}
+
+.spaceship_btn{
+    background-color: rgba(64, 64, 163, 0.2);
+    border-radius: 10px;
+}
+
+.startgame button.btn{
+    font-size: 20px;
+    border-radius: 20px;
+    height: 1.5em;
+    width: 10em;
+    background-color: green;
+    transition: ease 0.5s;
+}
+
+.startgame button.btn:hover{
+    width: 15em;
+}

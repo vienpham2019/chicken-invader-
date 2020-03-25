@@ -1,6 +1,7 @@
 const container = document.querySelector(".game")
 const score = document.querySelector("p#score")
 const health_container = document.querySelector("p#health_container")
+const stargame_container = document.querySelector("#startgame")
 
 let score_num = 0
 
@@ -21,6 +22,7 @@ let health_amount = 100
 
 let player_width
 let laserCooldown = laserSpeed
+let space_ship_src = "https://i.pinimg.com/originals/3b/03/94/3b0394153492f7a2e31e80bb9e4c4fb5.gif"
 
 const GAME_STATE = {
     leftPress: false,
@@ -40,8 +42,7 @@ function setPosition(element,x,y) {
 
 function createPlayer() {
     let player = document.createElement("img")
-    // player.src = "images/pngguru.com.png"
-    player.src = "https://i.pinimg.com/originals/3b/03/94/3b0394153492f7a2e31e80bb9e4c4fb5.gif"
+    player.src = space_ship_src
     player.id = "space_ship"
     container.append(player)
     player_width = player.width
@@ -151,8 +152,6 @@ function checkPosition(element) {
         let x1 = alien.x 
         let x2 = alien.x + 100 
         if(x1 < element.x && x2 > element.x && element.y <= (alien.y + 80)){
-            console.log(alien.y)
-            console.log(element.y) 
             alien.alien_heath -= 1
             if(alien.alien_heath == 0){
                 alien.alien.src = "https://media1.giphy.com/media/6mGPx9QGBTyUg/source.gif"
@@ -181,12 +180,14 @@ function checkPositionForAlien(laser){
     let y = GAME_HEIGHT - 100
 
     if(x1 <= laser.x && x2 >= laser.x && laser.x < y){
-        health.value -= 50; 
+        health.value -= 5; 
         laser.laser.remove()
         GAME_STATE.enemies_lasers.splice(GAME_STATE.enemies_lasers.indexOf(laser),1)
     }
     if(health.value === 0){
         container.innerHTML = ""
+        stargame_container.style.display = "block"
+        container.append(score,health_container,stargame_container)
     }
 }
 
@@ -244,8 +245,10 @@ function onKeyUp(e) {
 
 
 function init() {
+    stargame_container.style.display = "none"
+    score_num = 0
     createPlayer(container)
-    score.innerText = "Score: 0"
+    score.innerText = `Score: ${score_num}`
     health_container.innerHTML = "Health: <progress id='health' value='100' max='100'></progress>"
     for(let i = 1; i <= AMOUNT_ALIEN ; i ++){
         create_alien_by_amount()
@@ -260,4 +263,3 @@ function init() {
     })
     window.requestAnimationFrame(update)
 }
-
