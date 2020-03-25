@@ -231,7 +231,7 @@ function onKeyUp(e) {
     }
 }
 
-// init() 
+// init()  
 window.addEventListener("keydown",onKeyDown)
 window.addEventListener("keyup",onKeyUp)
 window.addEventListener("mousedown",()=> {
