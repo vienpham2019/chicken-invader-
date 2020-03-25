@@ -1,4 +1,6 @@
 body{
+    background-color: black;
+    color: white;
     margin: 0;
     padding: 0;
     height: 100%;
@@ -36,4 +38,9 @@ div.game{
 progress#health{
     width: 200px;
     position: absolute;
+}
+
+#score{
+    font-size: 20px;
+    margin-left: 10px;
 }
