@@ -9,6 +9,9 @@ body{
 div.game{
     height: 100%;
     width: 100%;
+    background: url("https://thumbs.gfycat.com/BasicWeightyFeline-small.gif");
+    /* background-repeat: no-repeat; */
+    /* background-size: cover; */
 }
 
 #space_ship{

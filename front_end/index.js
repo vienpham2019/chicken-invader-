@@ -37,7 +37,8 @@ function setPosition(element,x,y) {
 
 function createPlayer() {
     let player = document.createElement("img")
-    player.src = "images/pngguru.com.png"
+    // player.src = "images/pngguru.com.png"
+    player.src = "https://i.pinimg.com/originals/3b/03/94/3b0394153492f7a2e31e80bb9e4c4fb5.gif"
     player.id = "space_ship"
     container.append(player)
     player_width = player.width
@@ -50,7 +51,8 @@ function createAlien(x,y) {
 
     let alien = document.createElement("img")
 
-    alien.src = "images/alien.png"
+    // alien.src = "images/alien.png"
+    alien.src = "https://i.imgur.com/1WdeB21.gif"
     alien.className = "alien_ship"
 
     setPosition(alien,x,y)
