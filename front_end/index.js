@@ -16,6 +16,9 @@ const laserSpeed = 10
 let AMOUNT_ALIEN = 5
 const ALIEN_LASER_SPEED = 40
 
+let endgame = false
+let health_amount = 100
+
 let player_width
 let laserCooldown = laserSpeed
 
@@ -58,15 +61,6 @@ function createAlien(x,y) {
     setPosition(alien,x,y)
     container.append(alien)
     GAME_STATE.enemies.push({alien ,x ,y , alien_heath: 2, dx: 5 , dy: 2, laser_cooldown: ALIEN_LASER_SPEED})
-}
-
-function init() {
-    createPlayer(container)
-    score.innerText = "Score: 0"
-    health_container.innerHTML = "Health: <progress id='health' value='100' max='100'></progress>"
-    for(let i = 1; i <= AMOUNT_ALIEN ; i ++){
-        create_alien_by_amount()
-    }
 }
 
 function create_alien_by_amount() {
@@ -161,11 +155,14 @@ function checkPosition(element) {
             console.log(element.y) 
             alien.alien_heath -= 1
             if(alien.alien_heath == 0){
+                alien.alien.src = "https://media1.giphy.com/media/6mGPx9QGBTyUg/source.gif"
                 let song = new Audio("songs/explosion.mp3")
                 song.volume = "0.2"
                 song.play()
-                alien.alien.remove()
-                enemies.splice(enemies.indexOf(alien),1)
+                setTimeout(() => {
+                    alien.alien.remove()
+                    enemies.splice(enemies.indexOf(alien),1)
+                },800)
                 create_alien_by_amount()
                 score_num += 1
                 score.textContent = `Score: ${score_num}`
@@ -184,9 +181,12 @@ function checkPositionForAlien(laser){
     let y = GAME_HEIGHT - 100
 
     if(x1 <= laser.x && x2 >= laser.x && laser.x < y){
-        health.value -= 2; 
+        health.value -= 50; 
         laser.laser.remove()
         GAME_STATE.enemies_lasers.splice(GAME_STATE.enemies_lasers.indexOf(laser),1)
+    }
+    if(health.value === 0){
+        container.innerHTML = ""
     }
 }
 
@@ -242,14 +242,22 @@ function onKeyUp(e) {
     }
 }
 
-// init()  
-window.addEventListener("keydown",onKeyDown)
-window.addEventListener("keyup",onKeyUp)
-window.addEventListener("mousedown",()=> {
-    GAME_STATE.mousePress = true 
-})
-window.addEventListener("mouseup",()=> {
-    GAME_STATE.mousePress = false
-})
 
-window.requestAnimationFrame(update)
+function init() {
+    createPlayer(container)
+    score.innerText = "Score: 0"
+    health_container.innerHTML = "Health: <progress id='health' value='100' max='100'></progress>"
+    for(let i = 1; i <= AMOUNT_ALIEN ; i ++){
+        create_alien_by_amount()
+    }
+    window.addEventListener("keydown",onKeyDown)
+    window.addEventListener("keyup",onKeyUp)
+    window.addEventListener("mousedown",()=> {
+        GAME_STATE.mousePress = true 
+    })
+    window.addEventListener("mouseup",()=> {
+        GAME_STATE.mousePress = false
+    })
+    window.requestAnimationFrame(update)
+}
+
