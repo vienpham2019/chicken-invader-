@@ -1,13 +1,23 @@
+const container = document.querySelector(".game")
+const score = document.querySelector("p#score")
+const health_container = document.querySelector("p#health_container")
+
+let score_num = 0
+
 const KEY_CODE_LEFT = 65 // A
 const KEY_CODE_RIGHT = 68 // D
 
-const GAME_WIDTH = window.innerWidth
+const GAME_WIDTH = window.innerWidth 
 const GAME_HEIGHT = window.innerHeight
 
 const PLAYER_MAX_SPEED = 15
+const laserSpeed = 10
 
-const lazerSpeed = 6
-let lazerCooldown = lazerSpeed
+let AMOUNT_ALIEN = 5
+const ALIEN_LASER_SPEED = 40
+
+let player_width
+let laserCooldown = laserSpeed
 
 const GAME_STATE = {
     leftPress: false,
@@ -15,7 +25,9 @@ const GAME_STATE = {
     mousePress: false,
     playerX: 0,
     playerY: 0,
-    lazers: []
+    lasers: [],
+    enemies: [],
+    enemies_lasers: []
 }
 
 function setPosition(element,x,y) {
@@ -23,20 +35,42 @@ function setPosition(element,x,y) {
     element.style.top = `${y}px`
 }
 
-function createPlayer(container) {
-    GAME_STATE.playerX = GAME_WIDTH / 2 - (110 / 2)
-    GAME_STATE.playerY = GAME_HEIGHT - 110
-
+function createPlayer() {
     let player = document.createElement("img")
-    player.src = "image/pngguru.com.png"
+    player.src = "images/pngguru.com.png"
     player.id = "space_ship"
     container.append(player)
+    player_width = player.width
+    GAME_STATE.playerX = GAME_WIDTH / 2 - (player_width / 2)
+    GAME_STATE.playerY = GAME_HEIGHT - player_width
     setPosition(player,GAME_WIDTH.playerX,GAME_STATE.playerY)
 }
 
+function createAlien(x,y) {
+
+    let alien = document.createElement("img")
+
+    alien.src = "images/alien.png"
+    alien.className = "alien_ship"
+
+    setPosition(alien,x,y)
+    container.append(alien)
+    GAME_STATE.enemies.push({alien ,x ,y , alien_heath: 2, dx: 5 , dy: 2, laser_cooldown: ALIEN_LASER_SPEED})
+}
+
 function init() {
-    const container = document.querySelector(".game")
     createPlayer(container)
+    score.innerText = "Score: 0"
+    health_container.innerHTML = "Health: <progress id='health' value='100' max='100'></progress>"
+    for(let i = 1; i <= AMOUNT_ALIEN ; i ++){
+        create_alien_by_amount()
+    }
+}
+
+function create_alien_by_amount() {
+    const y = parseInt(Math.random() * 50) + 10
+    const x = parseInt(Math.random() * (GAME_WIDTH - 100)) 
+    createAlien(x,y)
 }
 
 function updatePlayer() {
@@ -44,42 +78,141 @@ function updatePlayer() {
     if(GAME_STATE.leftPress && GAME_STATE.playerX > 0){
         GAME_STATE.playerX -= PLAYER_MAX_SPEED
     }
-    if(GAME_STATE.rightPress && GAME_STATE.playerX < GAME_HEIGHT){
+    if(GAME_STATE.rightPress && GAME_STATE.playerX < (GAME_WIDTH - player_width)){
         GAME_STATE.playerX += PLAYER_MAX_SPEED
     }
     setPosition(player,GAME_STATE.playerX,GAME_STATE.playerY)
 
 }
 
-function createLazer(container, x , y) {
-    x = x + (110 / 2)
-    let lazer = document.createElement("img")
-    lazer.src = "image/laserBlue16.png"
-    lazer.className = "lazer"
-    container.append(lazer)
-    setPosition(lazer,x,y)
-    GAME_STATE.lazers.push({lazer , x , y})
+function createLaser(x , y) {
+    x = x + (player_width / 2)
+    let laser = document.createElement("img")
+    laser.src = "images/laserBlue16.png"
+    laser.className = "laser"
+    container.append(laser)
+    setPosition(laser,x,y)
+    GAME_STATE.lasers.push({laser , x , y})
+    let song = new Audio("songs/laser_song.mp3")
+    song.volume = "0.05"
+    song.play()
 }
 
-function updateLazers() {
-    const lazers = GAME_STATE.lazers
-    for(let i = 0; i < lazers.length; i++){
-        let lazer = lazers[i]
-        lazer.y -= 20
-        lazer.y > 0 ? setPosition(lazer.lazer,lazer.x,lazer.y) : lazer.lazer.remove()
+function updateLasers() {
+    const lasers = GAME_STATE.lasers
+    for(let i = 0; i < lasers.length; i++){
+        let laser = lasers[i]
+        laser.y -= 20
+        if(laser.y < 400){
+            checkPosition(laser)
+        }
+        if(laser.y > 0){
+            setPosition(laser.laser,laser.x,laser.y)
+        }else{
+            laser.laser.remove()
+            lasers.splice(lasers.indexOf(laser),1)
+        }
+    }
+}
+
+function createAlienLaser(x,y) {
+    x = x + (player_width / 2)
+    let laser = document.createElement("img")
+    laser.src = "images/laserRed01.png"
+    laser.className = "laser"
+    container.append(laser)
+    setPosition(laser,x,y)
+    GAME_STATE.enemies_lasers.push({laser , x , y})
+    let song = new Audio("songs/alien_laser.mp3")
+    song.volume = "0.02"
+    song.play()
+}
+
+function updateAlienLasers() {
+    const lasers = GAME_STATE.enemies_lasers
+    for(let i = 0; i < lasers.length; i++){
+        let laser = lasers[i]
+        laser.y += 20
+        if(laser.y < (GAME_WIDTH - player_width)){
+            checkPositionForAlien(laser)
+        }
+        if(laser.y < GAME_WIDTH){
+            setPosition(laser.laser,laser.x,laser.y)
+        }else{
+            laser.laser.remove()
+            lasers.splice(lasers.indexOf(laser),1)
+        }
+    }
+}
+
+function checkPosition(element) { 
+    let enemies = GAME_STATE.enemies
+    for (let i = 0; i < enemies.length; i++) {
+        let alien = GAME_STATE.enemies[i]
+        let x1 = alien.x 
+        let x2 = alien.x + 100 
+        if(x1 < element.x && x2 > element.x && element.y <= (alien.y + 80)){
+            console.log(alien.y)
+            console.log(element.y) 
+            alien.alien_heath -= 1
+            if(alien.alien_heath == 0){
+                let song = new Audio("songs/explosion.mp3")
+                song.volume = "0.2"
+                song.play()
+                alien.alien.remove()
+                enemies.splice(enemies.indexOf(alien),1)
+                create_alien_by_amount()
+                score_num += 1
+                score.textContent = `Score: ${score_num}`
+            }
+            element.laser.remove()
+            GAME_STATE.lasers.splice(GAME_STATE.lasers.indexOf(element),1)
+        }
+    }
+}
+
+function checkPositionForAlien(laser){
+    let health = document.getElementById("health")
+
+    let x1 = GAME_STATE.playerX
+    let x2 = GAME_STATE.playerX + (player_width / 2)
+    let y = GAME_HEIGHT - 100
+
+    if(x1 <= laser.x && x2 >= laser.x && laser.x < y){
+        health.value -= 2; 
+        laser.laser.remove()
+        GAME_STATE.enemies_lasers.splice(GAME_STATE.enemies_lasers.indexOf(laser),1)
     }
 }
 
 function update() {
-    const container = document.querySelector(".game")
     updatePlayer()
-    updateLazers()
-    if(GAME_STATE.mousePress && lazerCooldown <= 0){
-        createLazer(container,GAME_STATE.playerX,GAME_STATE.playerY)
-        lazerCooldown = lazerSpeed
+    updateLasers()   
+    if(GAME_STATE.mousePress && laserCooldown <= 0){
+        createLaser(GAME_STATE.playerX,GAME_STATE.playerY)
+        laserCooldown = laserSpeed
     }
 
-    lazerCooldown -= 1
+    laserCooldown -= 1
+
+    for(let alien_obj of GAME_STATE.enemies){
+        if((alien_obj.x + 100) > GAME_WIDTH || (alien_obj.x) < 0){
+            alien_obj.dx = -alien_obj.dx
+            alien_obj.dy = (Math.random() * 3) + 1
+        }
+        if((alien_obj.y + 100) > 400 || (alien_obj.y) < 0){
+            alien_obj.dy = -alien_obj.dy
+        }
+        let x = alien_obj.x += alien_obj.dx 
+        let y = alien_obj.y += alien_obj.dy
+        if(alien_obj.laser_cooldown === 0){
+            createAlienLaser(x,(y + 50))
+            alien_obj.laser_cooldown = ALIEN_LASER_SPEED
+        }
+        alien_obj.laser_cooldown -= 1
+        updateAlienLasers()
+        setPosition(alien_obj.alien,x,y)
+    }
     window.requestAnimationFrame(update)
 }
 
@@ -98,7 +231,7 @@ function onKeyUp(e) {
     }
 }
 
-init()
+// init() 
 window.addEventListener("keydown",onKeyDown)
 window.addEventListener("keyup",onKeyUp)
 window.addEventListener("mousedown",()=> {

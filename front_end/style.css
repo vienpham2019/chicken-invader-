@@ -1,23 +1,29 @@
 body{
-    /* background-color: black; */
-    margin: 0px;
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 0;
     height: 100%;
-    overflow-y: hidden;
+    overflow: hidden;
 }
-canvas#main{
-    /* background-color: red; */
-    border: 1px solid black;
+div.game{
     height: 100%;
     width: 100%;
 }
 
-img#space_ship{
+#space_ship{
     height: 10%;
-    width: 6%;
+    width: 100px;
     position: absolute; 
 }
 
-.game .lazer{
+.alien_ship{
+    height: 10%;
+    width: 100px;
+    position: absolute; 
+}
+
+.game .laser{
     position: absolute;
     margin-left: -2.5px;
     height: 30px;
@@ -27,4 +33,14 @@ div.game{
     background-color: black;
     width: 100vw;
     height: 100vh;
+}
+
+progress#health{
+    width: 200px;
+    position: absolute;
+}
+
+#score{
+    font-size: 20px;
+    margin-left: 10px;
 }
