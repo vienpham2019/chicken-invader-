@@ -79,9 +79,12 @@ function updatePlayer() {
     let player = document.querySelector("#space_ship")
     if(GAME_STATE.leftPress && GAME_STATE.playerX > 0){
         GAME_STATE.playerX -= PLAYER_MAX_SPEED
-    }
-    if(GAME_STATE.rightPress && GAME_STATE.playerX < (GAME_WIDTH - player_width)){
+        player.style.transform = "skewY(-5deg)"
+    }else if(GAME_STATE.rightPress && GAME_STATE.playerX < (GAME_WIDTH - player_width)){
         GAME_STATE.playerX += PLAYER_MAX_SPEED
+        player.style.transform = "skewY(5deg)"
+    }else{
+        player.style.transform = "skewY(0deg)"
     }
     setPosition(player,GAME_STATE.playerX,GAME_STATE.playerY)
 
@@ -201,6 +204,12 @@ function update() {
         if((alien_obj.x + 100) > GAME_WIDTH || (alien_obj.x) < 0){
             alien_obj.dx = -alien_obj.dx
             alien_obj.dy = (Math.random() * 3) + 1
+            if((alien_obj.x + 100) > GAME_WIDTH){
+                alien_obj.alien.style.transform = "skewY(-5deg)" 
+            }
+            if((alien_obj.x) < 0){
+                alien_obj.alien.style.transform = "skewY(5deg)" 
+            }
         }
         if((alien_obj.y + 100) > 400 || (alien_obj.y) < 0){
             alien_obj.dy = -alien_obj.dy
