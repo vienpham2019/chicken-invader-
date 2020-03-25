@@ -9,10 +9,7 @@ const GAME_HEIGHT = window.innerHeight
 const PLAYER_MAX_SPEED = 15
 const lazerSpeed = 6
 
-const ENEMIES_PER_ROW = 10
-const ENEMY_HORIZONTAL_PADDING = 80
-const ENEMY_VERTICAL_PADDING = 70
-const ENEMY_VERTICAL_SPACING = 80
+let AMOUNT_ALIEN = 2
 
 let player_width
 let lazerCooldown = lazerSpeed
@@ -50,19 +47,22 @@ function createAlien(x,y) {
     alien.src = "images/alien.png"
     alien.className = "alien_ship"
 
-    // alien.append(alien,health_bar)
     setPosition(alien,x,y)
     container.append(alien)
-    GAME_STATE.enemies.push({alien ,x ,y , alien_heath: 5})
+    GAME_STATE.enemies.push({alien ,x ,y , alien_heath: 2})
 }
 
 function init() {
     createPlayer(container)
-    for(let i = 1; i <= 2 ; i ++){
-        const y = 0
-        const x = GAME_WIDTH / parseInt(i * 2)
-        createAlien(x,y)
+    for(let i = 1; i <= AMOUNT_ALIEN ; i ++){
+        create_alien_by_amount()
     }
+}
+
+function create_alien_by_amount() {
+    const y = parseInt(Math.random() * 50) + 10
+    const x = parseInt(Math.random() * (GAME_WIDTH - 100)) 
+    createAlien(x,y)
 }
 
 function updatePlayer() {
@@ -92,7 +92,7 @@ function updateLazers() {
     for(let i = 0; i < lazers.length; i++){
         let lazer = lazers[i]
         lazer.y -= 20
-        if(lazer.y < 100){
+        if(lazer.y < 400){
             checkPosition(lazer)
         }
         if(lazer.y > 0){
@@ -110,11 +110,14 @@ function checkPosition(element) {
         let alien = GAME_STATE.enemies[i]
         let x1 = alien.x 
         let x2 = alien.x + 100 
-        if(x1 < element.x && x2 > element.x){
+        if(x1 < element.x && x2 > element.x && element.y <= (alien.y + 80)){
+            console.log(alien.y)
+            console.log(element.y) 
             alien.alien_heath -= 1
             if(alien.alien_heath == 0){
                 alien.alien.remove()
                 enemies.splice(enemies.indexOf(alien),1)
+                create_alien_by_amount()
             }
             console.log(alien.alien_heath)
             element.lazer.remove()
@@ -125,15 +128,31 @@ function checkPosition(element) {
     }
 }
 
+let dx = 5
+let dy = 2
+
 function update() {
     updatePlayer()
-    updateLazers()
+    updateLazers()   
     if(GAME_STATE.mousePress && lazerCooldown <= 0){
         createLazer(GAME_STATE.playerX,GAME_STATE.playerY)
         lazerCooldown = lazerSpeed
     }
 
     lazerCooldown -= 1
+
+    for(let alien_obj of GAME_STATE.enemies){
+        if((alien_obj.x + 100) > GAME_WIDTH || (alien_obj.x) < 0){
+            dx = -dx
+            dy = (Math.random() * 3) + 1
+        }
+        if((alien_obj.y + 100) > 400 || (alien_obj.y) < 0){
+            dy = -dy
+        }
+        let x = alien_obj.x += dx 
+        let y = alien_obj.y += dy
+        setPosition(alien_obj.alien,x,y)
+    }
     window.requestAnimationFrame(update)
 }
 
