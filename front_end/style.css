@@ -23,7 +23,7 @@ div.game{
     position: absolute; 
 }
 
-.game .lazer{
+.game .laser{
     position: absolute;
     margin-left: -2.5px;
     height: 30px;
