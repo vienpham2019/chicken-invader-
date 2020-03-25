@@ -37,7 +37,8 @@ function setPosition(element,x,y) {
 
 function createPlayer() {
     let player = document.createElement("img")
-    player.src = "images/pngguru.com.png"
+    // player.src = "images/pngguru.com.png"
+    player.src = "https://i.pinimg.com/originals/3b/03/94/3b0394153492f7a2e31e80bb9e4c4fb5.gif"
     player.id = "space_ship"
     container.append(player)
     player_width = player.width
@@ -50,7 +51,8 @@ function createAlien(x,y) {
 
     let alien = document.createElement("img")
 
-    alien.src = "images/alien.png"
+    // alien.src = "images/alien.png"
+    alien.src = "https://i.imgur.com/1WdeB21.gif"
     alien.className = "alien_ship"
 
     setPosition(alien,x,y)
@@ -77,9 +79,12 @@ function updatePlayer() {
     let player = document.querySelector("#space_ship")
     if(GAME_STATE.leftPress && GAME_STATE.playerX > 0){
         GAME_STATE.playerX -= PLAYER_MAX_SPEED
-    }
-    if(GAME_STATE.rightPress && GAME_STATE.playerX < (GAME_WIDTH - player_width)){
+        player.style.transform = "skewY(-5deg)"
+    }else if(GAME_STATE.rightPress && GAME_STATE.playerX < (GAME_WIDTH - player_width)){
         GAME_STATE.playerX += PLAYER_MAX_SPEED
+        player.style.transform = "skewY(5deg)"
+    }else{
+        player.style.transform = "skewY(0deg)"
     }
     setPosition(player,GAME_STATE.playerX,GAME_STATE.playerY)
 
@@ -199,6 +204,12 @@ function update() {
         if((alien_obj.x + 100) > GAME_WIDTH || (alien_obj.x) < 0){
             alien_obj.dx = -alien_obj.dx
             alien_obj.dy = (Math.random() * 3) + 1
+            if((alien_obj.x + 100) > GAME_WIDTH){
+                alien_obj.alien.style.transform = "skewY(-5deg)" 
+            }
+            if((alien_obj.x) < 0){
+                alien_obj.alien.style.transform = "skewY(5deg)" 
+            }
         }
         if((alien_obj.y + 100) > 400 || (alien_obj.y) < 0){
             alien_obj.dy = -alien_obj.dy
