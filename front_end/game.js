@@ -162,7 +162,6 @@ function checkPosition(element) {
                     alien.alien.remove()
                     enemies.splice(enemies.indexOf(alien),1)
                 },800)
-                create_alien_by_amount()
                 score_num += 1
                 score.textContent = `Score: ${score_num}`
             }
@@ -225,6 +224,9 @@ function update() {
         alien_obj.laser_cooldown -= 1
         updateAlienLasers()
         setPosition(alien_obj.alien,x,y)
+    }
+    if(GAME_STATE.enemies.length < AMOUNT_ALIEN){
+        create_alien_by_amount()
     }
     window.requestAnimationFrame(update)
 }
