@@ -8,6 +8,7 @@ let score_num = 0
 
 const KEY_CODE_LEFT = 65 // A
 const KEY_CODE_RIGHT = 68 // D
+const KEY_CODE_FIRER = 32 // space
 
 const GAME_WIDTH = window.innerWidth 
 const GAME_HEIGHT = window.innerHeight
@@ -28,7 +29,7 @@ let space_ship_src = "https://i.pinimg.com/originals/3b/03/94/3b0394153492f7a2e3
 const GAME_STATE = {
     leftPress: false,
     rightPress: false,
-    mousePress: false,
+    fireTrigger: false,
     playerX: 0,
     playerY: 0,
     lasers: [],
@@ -195,7 +196,7 @@ function checkPositionForAlien(laser){
 function update() {
     updatePlayer()
     updateLasers()   
-    if(GAME_STATE.mousePress && laserCooldown <= 0){
+    if(GAME_STATE.fireTrigger && laserCooldown <= 0){
         createLaser(GAME_STATE.playerX,GAME_STATE.playerY)
         laserCooldown = laserSpeed
     }
@@ -238,12 +239,18 @@ function onKeyDown(e) {
     }else if(e.keyCode === KEY_CODE_RIGHT){
         GAME_STATE.rightPress = true
     }
+    if(e.keyCode === KEY_CODE_FIRER){
+        GAME_STATE.fireTrigger = true
+    }
 }
 function onKeyUp(e) {
     if(e.keyCode === KEY_CODE_LEFT){
         GAME_STATE.leftPress = false
     }else if(e.keyCode === KEY_CODE_RIGHT){
         GAME_STATE.rightPress = false
+    }
+    if(e.keyCode === KEY_CODE_FIRER){
+        GAME_STATE.fireTrigger = false
     }
 }
 
@@ -264,11 +271,5 @@ function init() {
     }
     window.addEventListener("keydown",onKeyDown)
     window.addEventListener("keyup",onKeyUp)
-    window.addEventListener("mousedown",()=> {
-        GAME_STATE.mousePress = true 
-    })
-    window.addEventListener("mouseup",()=> {
-        GAME_STATE.mousePress = false
-    })
     window.requestAnimationFrame(update)
 }
