@@ -59,7 +59,7 @@ progress#health{
 #game_contain{
     display: block;
     width: 40vw;
-    height: 60vh;
+    height: 80vh;
     background-color: rgba(64, 64, 163, 0.2);
     border-radius: 10px;
     text-align: center;
@@ -69,7 +69,7 @@ progress#health{
     text-align: center;
     display: block;
     width: 20vw;
-    height: 60vh;
+    height: 80vh;
     border-radius: 10px;
     margin: 0 1vw;
     background-color: rgba(64, 64, 163, 0.2);

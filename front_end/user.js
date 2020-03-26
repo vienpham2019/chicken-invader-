@@ -1,3 +1,4 @@
+
 const ul = document.querySelector("#score_list")
 const input = document.querySelector("#player_name_input")
 const create_btn = document.querySelector("#start_game")
@@ -23,34 +24,6 @@ const create_player = (data) =>{
     li_container.append(li,h4)
     ul.append(li_container)
 }
-
-create_btn.addEventListener("click", ()=> {
-    if(input.value === ""){
-        alert("input empty")
-    }else{
-        if(!players.includes(input.value)){
-            fetch("http://localhost:3000/players",{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    player_name: input.value.trim(),
-                    age: 20
-                })
-            })
-            .then(res => res.json())
-            .then(player => {
-                input.value = ""
-                current_player = player
-                console.log(current_player)
-            })
-        }else{
-            current_player = players_objs.find(player => player.player_name === input.value)
-        }
-        init()
-    }
-})
 
 const top_players = (players) => {
     let new_arr = []
@@ -78,11 +51,50 @@ const make_game = (score) => {
     .then(() => load_highest_players())
 }
 
-
 const load_highest_players = () => {
     ul.innerHTML = ""
     input.value = ""
     current_player = ""
+    create_btn.addEventListener("click", ()=> {
+        if(input.value === ""){
+            alert("input empty")
+        }else{
+            if(!players.includes(input.value)){
+                fetch("http://localhost:3000/players",{
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        player_name: input.value.trim(),
+                        age: 20
+                    })
+                })
+                .then(res => res.json())
+                .then(player => {
+                    input.value = ""
+                    current_player = player
+                    console.log(current_player)
+                })
+            }else{
+                current_player = players_objs.find(player => player.player_name === input.value)
+            }
+            init()
+        }
+    })
+    let PAUSE = false 
+    let play_btn = document.querySelector("#song_play")
+    const BACKGROUND_SONG = new Audio("songs/game_song2.mp3")
+    play_btn.addEventListener("click", () => {
+        if(PAUSE){
+            BACKGROUND_SONG.pause()
+            play_btn.textContent = "Pause"
+        }else{
+            BACKGROUND_SONG.play()
+            play_btn.textContent = "Play"
+        }
+        PAUSE = !PAUSE
+    })
     fetch("http://localhost:3000/players")
     .then(res => res.json())
     .then(players => top_players(players))
