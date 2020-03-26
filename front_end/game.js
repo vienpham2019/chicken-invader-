@@ -1,6 +1,7 @@
 const container = document.querySelector(".game")
-const score = document.querySelector("p#score")
-const health_container = document.querySelector("p#health_container")
+// const score = document.querySelector("p#score")
+// const health_container = document.querySelector("p#health_container")
+let score , health_container
 const stargame_container = document.querySelector("#startgame")
 
 let score_num = 0
@@ -55,7 +56,6 @@ function createAlien(x,y) {
 
     let alien = document.createElement("img")
 
-    // alien.src = "images/alien.png"
     alien.src = "https://i.imgur.com/1WdeB21.gif"
     alien.className = "alien_ship"
 
@@ -180,14 +180,15 @@ function checkPositionForAlien(laser){
     let y = GAME_HEIGHT - 100
 
     if(x1 <= laser.x && x2 >= laser.x && laser.x < y){
-        health.value -= 5; 
+        health.value -= 50; 
         laser.laser.remove()
         GAME_STATE.enemies_lasers.splice(GAME_STATE.enemies_lasers.indexOf(laser),1)
     }
     if(health.value === 0){
+        make_game(score_num)
         container.innerHTML = ""
-        stargame_container.style.display = "block"
-        container.append(score,health_container,stargame_container)
+        stargame_container.style.display = "flex"
+        container.append(stargame_container)
     }
 }
 
@@ -245,11 +246,16 @@ function onKeyUp(e) {
 
 
 function init() {
+    score = document.createElement("p")
+    score.id = "score"
+    health_container = document.createElement("p")
+    health_container.id = ""
     stargame_container.style.display = "none"
     score_num = 0
     createPlayer(container)
     score.innerText = `Score: ${score_num}`
     health_container.innerHTML = "Health: <progress id='health' value='100' max='100'></progress>"
+    container.append(score,health_container)
     for(let i = 1; i <= AMOUNT_ALIEN ; i ++){
         create_alien_by_amount()
     }
