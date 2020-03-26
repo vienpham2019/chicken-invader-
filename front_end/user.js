@@ -81,6 +81,7 @@ const make_game = (score) => {
 
 const load_highest_players = () => {
     ul.innerHTML = ""
+    input.value = ""
     current_player = ""
     fetch("http://localhost:3000/players")
     .then(res => res.json())
