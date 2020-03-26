@@ -180,7 +180,7 @@ function checkPositionForAlien(laser){
     let y = GAME_HEIGHT - 100
 
     if(x1 <= laser.x && x2 >= laser.x && laser.x < y){
-        health.value -= 50; 
+        health.value -= 5; 
         laser.laser.remove()
         GAME_STATE.enemies_lasers.splice(GAME_STATE.enemies_lasers.indexOf(laser),1)
     }

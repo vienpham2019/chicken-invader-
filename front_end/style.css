@@ -105,8 +105,10 @@ progress#health{
 }
 
 input{
-    height: 20px;
-    width: 20em;
+    height: 30px;
+    width: 10em;
     border-radius: 5px;
     box-sizing: border-box;
+    text-align: center;
+    font-size: 20px;
 }

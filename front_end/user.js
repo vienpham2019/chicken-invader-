@@ -7,7 +7,9 @@ let current_player
 
 const create_player = (data) =>{
     players.push(data.player_obj.player_name)
-    players_objs.push(data.player_obj)
+    if(!players_objs.includes(data)){
+        players_objs.push(data.player_obj)
+    }
     let li_container = document.createElement("div")
     
     let li = document.createElement("li")
@@ -55,12 +57,10 @@ const top_players = (players) => {
     players.forEach(player => {
         let score_his = player.games.map(game => game.score)
         let highest_score = 0 
-        if(score_his.length != 0){
-            highest_score = Math.max(...score_his)
-        }
+        highest_score = Math.max(...score_his)
         new_arr.push({player_obj: player, score: highest_score})
     })
-    let top_players = new_arr.slice(0,5).sort((a,b) => b.score - a.score)
+    let top_players = new_arr.sort((a,b) => b.score - a.score).slice(0,5)
     top_players.forEach(player => create_player(player))
 }
 
@@ -81,6 +81,7 @@ const make_game = (score) => {
 
 const load_highest_players = () => {
     ul.innerHTML = ""
+    current_player = ""
     fetch("http://localhost:3000/players")
     .then(res => res.json())
     .then(players => top_players(players))
