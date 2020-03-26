@@ -61,7 +61,8 @@ function createAlien(x,y) {
 
     setPosition(alien,x,y)
     container.append(alien)
-    GAME_STATE.enemies.push({alien ,x ,y , alien_heath: 2, dx: 5 , dy: 2, laser_cooldown: ALIEN_LASER_SPEED})
+    let random_num = (Math.round(Math.random()) - 0.5) * 10
+    GAME_STATE.enemies.push({alien ,x ,y , alien_heath: 2, dx: random_num, dy: 2, laser_cooldown: ALIEN_LASER_SPEED})
 }
 
 function create_alien_by_amount() {
