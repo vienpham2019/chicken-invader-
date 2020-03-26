@@ -1,6 +1,4 @@
 const container = document.querySelector(".game")
-// const score = document.querySelector("p#score")
-// const health_container = document.querySelector("p#health_container")
 let score , health_container
 const stargame_container = document.querySelector("#startgame")
 
@@ -15,9 +13,10 @@ const GAME_HEIGHT = window.innerHeight
 
 const PLAYER_MAX_SPEED = 15
 const laserSpeed = 10
+const DAMAGE = 2
 
-let AMOUNT_ALIEN = 5
-const ALIEN_LASER_SPEED = 40
+let AMOUNT_ALIEN = 6
+const ALIEN_LASER_SPEED = 50
 
 let endgame = false
 let health_amount = 100
@@ -181,7 +180,7 @@ function checkPositionForAlien(laser){
     let y = GAME_HEIGHT - 100
 
     if(x1 <= laser.x && x2 >= laser.x && laser.x < y){
-        health.value -= 5; 
+        health.value -= DAMAGE; 
         laser.laser.remove()
         GAME_STATE.enemies_lasers.splice(GAME_STATE.enemies_lasers.indexOf(laser),1)
     }
