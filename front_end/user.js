@@ -1,25 +1,22 @@
-const ul = document.querySelector("ul#list_container")
-const create_btn = document.querySelector("#create_btn")
-const input = document.querySelector("#input_playername")
+const ul = document.querySelector("#score_list")
+const input = document.querySelector("#player_name_input")
+const create_btn = document.querySelector("#start_game")
 const players = []
+const players_objs = []
+let current_player
 
 const create_player = (data) =>{
-    players.push(data.player_name)
-    let player_game_scores = data.games.map(game => game.score)
-
-    let highest_score = 0
-
-    if(player_game_scores.length != 0){
-        highest_score = Math.max(...player_game_scores)
-    }
-
+    players.push(data.player_obj.player_name)
+    players_objs.push(data.player_obj)
     let li_container = document.createElement("div")
     
     let li = document.createElement("li")
-    li.innerText = data.player_name 
+    li.innerText = data.player_obj.player_name
+    li.className = "top_player_li"
 
     let h4 = document.createElement("h4")
-    h4.innerText = `Highest Score: ${highest_score}`
+    h4.innerText = `Highest Score: ${data.score}`
+    h4.className = "top_player_h4"
 
     li_container.append(li,h4)
     ul.append(li_container)
@@ -43,20 +40,51 @@ create_btn.addEventListener("click", ()=> {
             .then(res => res.json())
             .then(player => {
                 input.value = ""
-                create_player(player)
+                current_player = player
+                console.log(current_player)
             })
+        }else{
+            current_player = players_objs.find(player => player.player_name === input.value)
         }
+        init()
     }
 })
 
-
-
-fetch("http://localhost:3000/players")
-.then(res => res.json())
-.then(players => {
+const top_players = (players) => {
+    let new_arr = []
     players.forEach(player => {
-        create_player(player)
+        let score_his = player.games.map(game => game.score)
+        let highest_score = 0 
+        if(score_his.length != 0){
+            highest_score = Math.max(...score_his)
+        }
+        new_arr.push({player_obj: player, score: highest_score})
     })
-})
+    let top_players = new_arr.slice(0,5).sort((a,b) => b.score - a.score)
+    top_players.forEach(player => create_player(player))
+}
 
-console.log(players)
+const make_game = (score) => {
+    fetch("http://localhost:3000/games",{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            score,
+            player_id: current_player.id
+        })
+    })
+    .then(() => load_highest_players())
+}
+
+
+const load_highest_players = () => {
+    ul.innerHTML = ""
+    fetch("http://localhost:3000/players")
+    .then(res => res.json())
+    .then(players => top_players(players))
+}
+
+load_highest_players()
+
