@@ -15,13 +15,20 @@ const PLAYER_MAX_SPEED = 15
 const laserSpeed = 10
 const DAMAGE = 2
 
-let AMOUNT_ALIEN = 6
+let AMOUNT_ALIEN = 1
+const LEVEL_DELAY_SPEED = 500
+let LEVEL_DELAY = LEVEL_DELAY_SPEED
+const MAX_AMOUNT_ALIEN = 8
 const ALIEN_LASER_SPEED = 50
 
-let endgame = false
+let ALIEN_HEALTH = 2
+let POINT = 1
+
 let health_amount = 100
 
-let player_width
+// let player_width , endgame
+let myReq , endgame , level_num , level
+
 let laserCooldown = laserSpeed
 let space_ship_src = "https://i.pinimg.com/originals/3b/03/94/3b0394153492f7a2e31e80bb9e4c4fb5.gif"
 
@@ -62,7 +69,7 @@ function createAlien(x,y) {
     setPosition(alien,x,y)
     container.append(alien)
     let random_num = (Math.round(Math.random()) - 0.5) * 10
-    GAME_STATE.enemies.push({alien ,x ,y , alien_heath: 2, dx: random_num, dy: 2, laser_cooldown: ALIEN_LASER_SPEED})
+    GAME_STATE.enemies.push({alien ,x ,y , alien_heath: ALIEN_HEALTH, dx: random_num, dy: 2, laser_cooldown: ALIEN_LASER_SPEED})
 }
 
 function create_alien_by_amount() {
@@ -155,15 +162,15 @@ function checkPosition(element) {
         if(x1 < element.x && x2 > element.x && element.y <= (alien.y + 80)){
             alien.alien_heath -= 1
             if(alien.alien_heath == 0){
-                alien.alien.src = "https://media1.giphy.com/media/6mGPx9QGBTyUg/source.gif"
+                alien.alien.src = "https://media.giphy.com/media/1yTcsA056xvnthdju0/giphy.gif"
                 let song = new Audio("songs/explosion.mp3")
                 song.volume = "0.2"
                 song.play()
                 setTimeout(() => {
                     alien.alien.remove()
                     enemies.splice(enemies.indexOf(alien),1)
-                },800)
-                score_num += 1
+                },500)
+                score_num += POINT
                 score.textContent = `Score: ${score_num}`
             }
             element.laser.remove()
@@ -190,6 +197,13 @@ function checkPositionForAlien(laser){
         stargame_container.style.display = "flex"
         container.append(stargame_container)
     }
+}
+
+function endGame() {
+    make_game(score_num)
+    container.innerHTML = ""
+    stargame_container.style.display = "flex"
+    container.append(stargame_container)
 }
 
 function update() {
@@ -229,7 +243,19 @@ function update() {
     if(GAME_STATE.enemies.length < AMOUNT_ALIEN){
         create_alien_by_amount()
     }
-    window.requestAnimationFrame(update)
+
+    if(AMOUNT_ALIEN <= MAX_AMOUNT_ALIEN){
+        LEVEL_DELAY -= 1
+        if(LEVEL_DELAY === 0){
+            AMOUNT_ALIEN ++
+            level_num ++
+            level.textContent = `Level: ${level_num}/${MAX_AMOUNT_ALIEN}`
+            ALIEN_HEALTH ++
+            POINT ++
+            LEVEL_DELAY = LEVEL_DELAY_SPEED
+        }
+    }
+    requestAnimationFrame(update)
 }
 
 function onKeyDown(e) {
@@ -255,20 +281,29 @@ function onKeyUp(e) {
 
 
 function init() {
+    score_num = 0
+    level_num = 1
+
     score = document.createElement("p")
     score.id = "score"
-    health_container = document.createElement("p")
-    health_container.id = ""
-    stargame_container.style.display = "none"
-    score_num = 0
-    createPlayer(container)
     score.innerText = `Score: ${score_num}`
+
+    level = document.createElement("p")
+    level.innerText = `Level: ${level_num}/${MAX_AMOUNT_ALIEN}`
+    level.id = "level"
+
+    health_container = document.createElement("p")
     health_container.innerHTML = "Health: <progress id='health' value='100' max='100'></progress>"
-    container.append(score,health_container)
+    stargame_container.style.display = "none"
+    container.append(score,level,health_container)
+
+    createPlayer()
+
     for(let i = 1; i <= AMOUNT_ALIEN ; i ++){
         create_alien_by_amount()
     }
+
     window.addEventListener("keydown",onKeyDown)
     window.addEventListener("keyup",onKeyUp)
-    window.requestAnimationFrame(update)
+    requestAnimationFrame(update)
 }
