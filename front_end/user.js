@@ -47,7 +47,8 @@ const make_game = (score) => {
             score,
             player_id: current_player.id
         })
-    }).then(() => load_highest_players())
+    })
+    .then(() => load_highest_players())
 }
 
 create_btn.addEventListener("click", ()=> {
