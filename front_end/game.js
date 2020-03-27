@@ -12,25 +12,23 @@ const GAME_WIDTH = window.innerWidth
 const GAME_HEIGHT = window.innerHeight
 
 const PLAYER_MAX_SPEED = 15
-const laserSpeed = 10
+let laserSpeed = 10
 const DAMAGE = 2
 
-let AMOUNT_ALIEN = 1
+let AMOUNT_ALIEN
 const LEVEL_DELAY_SPEED = 500
 let LEVEL_DELAY = LEVEL_DELAY_SPEED
 const MAX_AMOUNT_ALIEN = 8
 const ALIEN_LASER_SPEED = 50
 
-let ALIEN_HEALTH = 2
-let POINT = 1
+let ALIEN_HEALTH , POINT 
 
 let health_amount = 100
 
-// let player_width , endgame
 let myReq , endgame , level_num , level
 
 let laserCooldown = laserSpeed
-let space_ship_src = "https://i.pinimg.com/originals/3b/03/94/3b0394153492f7a2e31e80bb9e4c4fb5.gif"
+let space_ship_src = "images/player_ship.gif"
 
 const GAME_STATE = {
     leftPress: false,
@@ -63,7 +61,7 @@ function createAlien(x,y) {
 
     let alien = document.createElement("img")
 
-    alien.src = "https://i.imgur.com/1WdeB21.gif"
+    alien.src = "images/alien_ship.gif"
     alien.className = "alien_ship"
 
     setPosition(alien,x,y)
@@ -162,7 +160,7 @@ function checkPosition(element) {
         if(x1 < element.x && x2 > element.x && element.y <= (alien.y + 80)){
             alien.alien_heath -= 1
             if(alien.alien_heath == 0){
-                alien.alien.src = "https://media.giphy.com/media/1yTcsA056xvnthdju0/giphy.gif"
+                alien.alien.src = "images/explosion.gif"
                 let song = new Audio("songs/explosion.mp3")
                 song.volume = "0.2"
                 song.play()
@@ -249,9 +247,10 @@ function update() {
         if(LEVEL_DELAY === 0){
             AMOUNT_ALIEN ++
             level_num ++
-            level.textContent = `Level: ${level_num}/${MAX_AMOUNT_ALIEN}`
+            level.textContent = `Level: ${level_num}/${MAX_AMOUNT_ALIEN + 1}`
             ALIEN_HEALTH ++
             POINT ++
+            laserSpeed -= 0.25
             LEVEL_DELAY = LEVEL_DELAY_SPEED
         }
     }
@@ -281,6 +280,9 @@ function onKeyUp(e) {
 
 
 function init() {
+    AMOUNT_ALIEN = 1
+    ALIEN_HEALTH = 2
+    POINT = 1
     score_num = 0
     level_num = 1
 
@@ -289,7 +291,7 @@ function init() {
     score.innerText = `Score: ${score_num}`
 
     level = document.createElement("p")
-    level.innerText = `Level: ${level_num}/${MAX_AMOUNT_ALIEN}`
+    level.innerText = `Level: ${level_num}/${MAX_AMOUNT_ALIEN + 1}`
     level.id = "level"
 
     health_container = document.createElement("p")
@@ -299,9 +301,7 @@ function init() {
 
     createPlayer()
 
-    for(let i = 1; i <= AMOUNT_ALIEN ; i ++){
-        create_alien_by_amount()
-    }
+    create_alien_by_amount()
 
     window.addEventListener("keydown",onKeyDown)
     window.addEventListener("keyup",onKeyUp)

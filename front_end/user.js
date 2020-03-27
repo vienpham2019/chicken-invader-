@@ -1,4 +1,4 @@
-
+const BACKGROUND_SONG = new Audio("songs/game_song2.mp3")
 const ul = document.querySelector("#score_list")
 const input = document.querySelector("#player_name_input")
 const create_btn = document.querySelector("#start_game")
