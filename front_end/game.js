@@ -12,8 +12,8 @@ const GAME_WIDTH = window.innerWidth
 const GAME_HEIGHT = window.innerHeight
 
 const PLAYER_MAX_SPEED = 15
-const laserSpeed = 10
-const DAMAGE = 25
+let laserSpeed = 10
+const DAMAGE = 2
 
 let AMOUNT_ALIEN
 const LEVEL_DELAY_SPEED = 500
@@ -25,7 +25,6 @@ let ALIEN_HEALTH , POINT
 
 let health_amount = 100
 
-// let player_width , endgame
 let myReq , endgame , level_num , level
 
 let laserCooldown = laserSpeed
@@ -248,9 +247,10 @@ function update() {
         if(LEVEL_DELAY === 0){
             AMOUNT_ALIEN ++
             level_num ++
-            level.textContent = `Level: ${level_num}/${MAX_AMOUNT_ALIEN}`
+            level.textContent = `Level: ${level_num}/${MAX_AMOUNT_ALIEN + 1}`
             ALIEN_HEALTH ++
             POINT ++
+            laserSpeed -= 0.25
             LEVEL_DELAY = LEVEL_DELAY_SPEED
         }
     }
@@ -291,7 +291,7 @@ function init() {
     score.innerText = `Score: ${score_num}`
 
     level = document.createElement("p")
-    level.innerText = `Level: ${level_num}/${MAX_AMOUNT_ALIEN}`
+    level.innerText = `Level: ${level_num}/${MAX_AMOUNT_ALIEN + 1}`
     level.id = "level"
 
     health_container = document.createElement("p")
