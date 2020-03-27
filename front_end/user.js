@@ -53,7 +53,7 @@ const make_game = (score) => {
 
 create_btn.addEventListener("click", ()=> {
     if(input.value === ""){
-        alert("input empty")
+        alert("Please enter valid name")
     }else{
         if(!players.includes(input.value)){
             fetch("http://localhost:3000/players",{
