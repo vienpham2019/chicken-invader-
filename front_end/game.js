@@ -13,12 +13,11 @@ const GAME_HEIGHT = window.innerHeight
 
 const PLAYER_MAX_SPEED = 15
 const laserSpeed = 10
-const DAMAGE = 2
+const DAMAGE = 25
 
 let AMOUNT_ALIEN = 6
 const ALIEN_LASER_SPEED = 50
 
-let endgame = false
 let health_amount = 100
 
 let player_width
